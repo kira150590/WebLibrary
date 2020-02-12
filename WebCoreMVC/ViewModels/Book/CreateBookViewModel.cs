@@ -21,7 +21,7 @@ namespace WebCoreMVC.ViewModels
         public string Author { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
-        [StringLength(maximumLength: 4, ErrorMessage = "{0} Không được vượt quá {1}")]
+        [Range(4, Int32.MaxValue)]
         [Display(Name = "Năm Xuất Bản")]
         public int YearOfPrint { get; set; }
 
@@ -31,7 +31,7 @@ namespace WebCoreMVC.ViewModels
         public string Code { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
-        [StringLength(maximumLength: 10, MinimumLength = 1, ErrorMessage = "{0} Không được nhỏ hơn {2} và vượt quá {1}")]
+        [Range(1, Int32.MaxValue)]
         [Display(Name = "Số Lượng")]
         public int Quantity { get; set; }
 

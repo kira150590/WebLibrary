@@ -337,14 +337,49 @@ namespace WebCoreMVC.Controllers
                 return View(updateBook);
             }
 
-
-
             _dbContext.SaveChanges();
 
             return RedirectToAction("Books");
         }
         #endregion
+        [HttpGet]
+        public IActionResult DeleteBook(int? id)
+        {
+            var book = _dbContext.BooksList.FirstOrDefault(x => x.Id == id);
 
+            ViewBag.CurrentPage = Request.Query["currentPage"];
+            ViewBag.PageSize = Request.Query["pageSize"];
+            ViewBag.SearchString = Request.Query["SearchString"];
+            ViewBag.Category = Request.Query["category"];
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return View(id);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteBookConfirmed(int id)
+        {
+            _dbContext.Entry(new Book()
+            {
+                Id = id
+            }).State = EntityState.Deleted;
+
+            _dbContext.SaveChanges();
+
+            return RedirectToAction("index", new
+            {
+
+                searchString = Request.Query["searchString"],
+                category = Request.Query["category"],
+                currentPage = Request.Query["currentPage"],
+                pageSize = Request.Query["pageSize"]
+            });
+        }
         #region Delete Book
         [HttpPost]
         public JsonResult AjaxDelete(int id)
