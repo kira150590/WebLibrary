@@ -1,0 +1,72 @@
+﻿@model CreateBookViewModel
+@section Styles
+{
+    <style>
+        div {
+            font-size: 16px;
+            color: #007bff;
+        }
+    </style>
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(imageUpload).on('change', function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('')
+            })
+        });
+    </script>
+
+}
+
+@using (Html.BeginForm("createbook", "home", FormMethod.Post, new { @class = "col-md-4", enctype = "multipart/form-data" }))
+{
+    Html.AntiForgeryToken();
+    @Html.ValidationSummary(false)
+
+    <div class="form-group">
+        <!--Gọi lại nhãn ở ViewModel hiển thị tên-->
+        @Html.LabelFor(x => x.NameOfBook)
+        @Html.TextBoxFor(x => x.NameOfBook, new { placeholder = "", @class = "form-control" })
+        <!--Hiển thị lỗi khi k nhập đúng-->
+        @Html.ValidationMessageFor(x => x.NameOfBook)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Author)
+        @Html.TextBoxFor(x => x.Author, new { placeholder = "", @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Author)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Categories)
+        @Html.DropDownListFor(x => x.CategoryId, (IEnumerable<SelectListItem>)ViewBag.Categories, "Danh Mục", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.CategoryId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.YearOfPrint)
+        @Html.TextBoxFor(x => x.YearOfPrint, new { placeholder = "", @class = "form-control", type = "number" })
+        @Html.ValidationMessageFor(x => x.YearOfPrint)
+        <small class="form-text text-muted">Ví dụ: 2000</small>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Quantity)
+        @Html.TextBoxFor(x => x.Quantity, new { placeholder = "", @class = "form-control", type = "number" })
+        @Html.ValidationMessageFor(x => x.Quantity)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Code)
+        @Html.TextBoxFor(x => x.Code, new { placeholder = "", @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Code)
+        <small class="form-text text-muted">Ví dụ: a1234</small>
+    </div>
+    <div id="imageUpload" class="form-group">
+        @Html.LabelFor(x => x.Image)
+        @Html.DisplayFor(x => x.Image, new { placeholder = "", @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Image)
+        <input type="file" name="Image" />
+    </div>
+    <button type="submit" class="btn btn-primary">Tạo Mới</button>
+    <button action="/home/books" type="submit" class="btn btn-primary" style="position: relative; right: -30px;">Trở Về</button>
+}

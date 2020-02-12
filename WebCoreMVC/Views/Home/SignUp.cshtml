@@ -1,0 +1,102 @@
+﻿@model CreateUserViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutSignUp.cshtml";
+}
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cbShowPassword').click(function () {
+                var currentPassowrdFiled = $('#txtPassword');
+                var currentPassword = currentPassowrdFiled.val();
+                currentPassowrdFiled.remove();
+
+                if ($(this).is(':checked')) {
+                    $(this).before('<input type="text" id="txtPassword" value="'
+                        + currentPassword + '">');
+                }
+                else {
+                    $(this).before('<input type="password" id="txtPassword" value="'
+                        + currentPassword + '">');
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(imageUpload).on('change', function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('')
+            })
+        });
+    </script>
+
+}
+
+<div class="sub-main-w3">
+    @using (Html.BeginForm("SignUp", "home", FormMethod.Post, new { @class = "col-md-4" }))
+    {
+        Html.AntiForgeryToken();
+        @Html.ValidationSummary(false)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserName)
+            @Html.TextBoxFor(x => x.UserName, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.PassWord)
+            @Html.PasswordFor(x => x.PassWord, new { placeholder = "", id = "txtPassword" })
+
+            <input type="checkbox" id="cbShowPassword" />Show password
+            @Html.ValidationMessageFor(x => x.PassWord)
+
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.FirstName)
+            @Html.TextBoxFor(x => x.FirstName, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FirstName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.LastName)
+            @Html.TextBoxFor(x => x.LastName, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.LastName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Birthday)
+            @Html.TextBoxFor(x => x.Birthday, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Birthday)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.PhoneNumber)
+            @Html.TextBoxFor(x => x.PhoneNumber, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PhoneNumber)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Email)
+            @Html.TextBoxFor(x => x.Email, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Email)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Address)
+            @Html.TextBoxFor(x => x.Address, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Address)
+        </div>
+        <div id="imageUpload" class="form-group">
+            @Html.LabelFor(x => x.Image)
+            @Html.DisplayFor(x => x.Image, new { placeholder = "", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Image)
+            <input type="file" name="Image" />
+        </div>
+        <div class="form-group">
+            <label class="checkbox-inline">
+                <input type="checkbox" value="true" required>I agree to the terms and conditions
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Tạo Tài Khoản</button>
+    }
+</div>
