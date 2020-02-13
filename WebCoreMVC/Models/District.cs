@@ -17,7 +17,7 @@ namespace WebCoreMVC.Models
         [Required]
         public string Name { get; set; }
 
-        [StringLength(50)]
+        [Range(1,Int32.MaxValue)]
         public int ProvinceId { get; set; }
 
         [ForeignKey("ProvinceId")]

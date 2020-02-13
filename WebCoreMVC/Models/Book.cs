@@ -18,7 +18,7 @@ namespace WebCoreMVC.Models
         public string Author { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
-        [Range(4, Int32.MaxValue)]
+        [Range(1, Int32.MaxValue)]
         public int YearOfPrint { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]

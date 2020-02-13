@@ -9,7 +9,7 @@ namespace WebCoreMVC.ViewModels
         public int Id { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
-        [StringLength(maximumLength: 20, MinimumLength = 8, ErrorMessage = "{0} Không được nhỏ hơn {2} và vượt quá {1}")]
+        [StringLength(maximumLength: 20, MinimumLength = 4, ErrorMessage = "{0} Không được nhỏ hơn {2} và vượt quá {1}")]
         [Display(Name = "Tên Đăng Nhập")]
         public string UserName { get; set; }
 

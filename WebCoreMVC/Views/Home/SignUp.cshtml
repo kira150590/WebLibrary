@@ -24,6 +24,28 @@
                 }
             });
         });
+
+        var $province = $('#Province');
+        var $district = $('#District');
+
+        $province.on('change', function () {
+            var $this = $(this);
+            $.ajax({
+                url: '@Url.Action("GetDistricts", "Home")',
+                method: 'Get',
+                dataType: 'json',
+                data: {
+                    provinceId: $this.val()
+                }
+            }).done(function (data) {
+                $district.find('option:not(:first)').remove();
+                var result = '';
+                data.forEach(ele => {
+                    result += `<option value="${ele.value}">${ele.text}</option>`;
+                });
+                $district.append(result);
+            })
+        });
     </script>
 
     <script type="text/javascript">
@@ -51,10 +73,8 @@
         <div class="form-group">
             @Html.LabelFor(x => x.PassWord)
             @Html.PasswordFor(x => x.PassWord, new { placeholder = "", id = "txtPassword" })
-
             <input type="checkbox" id="cbShowPassword" />Show password
             @Html.ValidationMessageFor(x => x.PassWord)
-
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.FirstName)
@@ -85,6 +105,22 @@
             @Html.LabelFor(x => x.Address)
             @Html.TextBoxFor(x => x.Address, new { placeholder = "", @class = "form-control" })
             @Html.ValidationMessageFor(x => x.Address)
+        </div>
+        <div class="form-group col-md-2">
+            <label for="Province">Tỉnh thành</label>
+            <select id="Province" class="form-control">
+                <option value="">--Không chọn--</option>
+                @foreach (var option in (ViewBag.Province as IEnumerable<SelectListItem>))
+                {
+                    <option value="@option.Value">@option.Text</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="District">Quận huyện</label>
+            <select id="District" class="form-control">
+                <option value="">--Không chọn--</option>
+            </select>
         </div>
         <div id="imageUpload" class="form-group">
             @Html.LabelFor(x => x.Image)

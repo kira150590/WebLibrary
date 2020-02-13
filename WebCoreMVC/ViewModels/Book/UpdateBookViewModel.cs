@@ -21,7 +21,7 @@ namespace WebCoreMVC.ViewModels
         public string Author { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
-        [Range(4, Int32.MaxValue)]
+        [Range(1, Int32.MaxValue)]
         [Display(Name = "Năm Xuất Bản")]
         public int YearOfPrint { get; set; }
 

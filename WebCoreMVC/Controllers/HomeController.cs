@@ -195,6 +195,7 @@ namespace WebCoreMVC.Controllers
         }
         #endregion
 
+        #region CRUD Book
         #region Create Book
         [HttpGet]
         public IActionResult CreateBook()
@@ -342,6 +343,7 @@ namespace WebCoreMVC.Controllers
             return RedirectToAction("Books");
         }
         #endregion
+
         [HttpGet]
         public IActionResult DeleteBook(int? id)
         {
@@ -495,16 +497,42 @@ namespace WebCoreMVC.Controllers
         }
         #endregion
 
+        #endregion
+
+        #region User
         [HttpGet]
         public IActionResult SignUp()
         {
+            ViewBag.Province = _dbContext.Provinces.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).ToList();
             return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetDistricts(int provinceId)
+        {
+            var temp = _dbContext.Districts.Where(x => x.ProvinceId == provinceId).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).ToList();
+
+            return Json(temp);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult SignUp(CreateUserViewModel createUser)
         {
+            ViewBag.Province = _dbContext.Provinces.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).ToList();
+
             if (_dbContext.UsersList.Any(x => x.UserName == createUser.UserName))
             {
                 ModelState.AddModelError(string.Empty, "Tên đăng nhập đã tồn tại");
@@ -549,5 +577,6 @@ namespace WebCoreMVC.Controllers
             return RedirectToAction("Index");
         }
 
+        #endregion
     }
 }
