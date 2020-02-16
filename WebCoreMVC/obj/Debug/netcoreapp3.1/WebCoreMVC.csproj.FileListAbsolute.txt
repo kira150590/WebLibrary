@@ -69,3 +69,5 @@
 /Users/admin/Desktop/Code/MVC/WebCoreMVC/WebCoreMVC/obj/Debug/netcoreapp3.1/Razor/Views/Home/SignUp.cshtml.g.cs
 /Users/admin/Desktop/Code/MVC/WebCoreMVC/WebCoreMVC/obj/Debug/netcoreapp3.1/Razor/Views/Home/UpdateBook.cshtml.g.cs
 /Users/admin/Desktop/Code/MVC/WebCoreMVC/WebCoreMVC/bin/Debug/netcoreapp3.1/mono_crash.42f6ec106.0.json
+/Users/admin/Desktop/Code/MVC/WebCoreMVC/WebCoreMVC/obj/Debug/netcoreapp3.1/Razor/Views/Home/Users.cshtml.g.cs
+/Users/admin/Desktop/Code/MVC/WebCoreMVC/WebCoreMVC/obj/Debug/netcoreapp3.1/Razor/Views/Home/DetailsUser.cshtml.g.cs

@@ -23,5 +23,6 @@
     <Folder Include="ViewModels\" />
     <Folder Include="ViewModels\Book\" />
     <Folder Include="ViewModels\User\" />
+    <Folder Include="ViewModels\ProvinceDistrict\" />
   </ItemGroup>
 </Project>

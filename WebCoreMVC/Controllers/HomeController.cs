@@ -28,13 +28,12 @@ namespace WebCoreMVC.Controllers
             _webHostingEnvironment = webHostingEnvironment;
         }
 
-        #region Index
-
         public IActionResult Index()
         {
             return View();
         }
 
+        #region Books
         public IActionResult Books(string searchString, string sortOrder, int? category, int currentPage = 1, int pageSize = 5)
         {
 
@@ -44,6 +43,7 @@ namespace WebCoreMVC.Controllers
 
             IQueryable<Category> categories = _dbContext.CategoriesList;
 
+            
             if (category.HasValue)
             {
                 books = books.Where(x => x.CategoryId == category);
@@ -193,9 +193,7 @@ namespace WebCoreMVC.Controllers
                 Categories = CategoryViewModel.CategoryViews(categories),
             });
         }
-        #endregion
 
-        #region CRUD Book
         #region Create Book
         [HttpGet]
         public IActionResult CreateBook()
@@ -344,44 +342,6 @@ namespace WebCoreMVC.Controllers
         }
         #endregion
 
-        [HttpGet]
-        public IActionResult DeleteBook(int? id)
-        {
-            var book = _dbContext.BooksList.FirstOrDefault(x => x.Id == id);
-
-            ViewBag.CurrentPage = Request.Query["currentPage"];
-            ViewBag.PageSize = Request.Query["pageSize"];
-            ViewBag.SearchString = Request.Query["SearchString"];
-            ViewBag.Category = Request.Query["category"];
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(id);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteBookConfirmed(int id)
-        {
-            _dbContext.Entry(new Book()
-            {
-                Id = id
-            }).State = EntityState.Deleted;
-
-            _dbContext.SaveChanges();
-
-            return RedirectToAction("index", new
-            {
-
-                searchString = Request.Query["searchString"],
-                category = Request.Query["category"],
-                currentPage = Request.Query["currentPage"],
-                pageSize = Request.Query["pageSize"]
-            });
-        }
         #region Delete Book
         [HttpPost]
         public JsonResult AjaxDelete(int id)
@@ -500,6 +460,262 @@ namespace WebCoreMVC.Controllers
         #endregion
 
         #region User
+        public IActionResult Users(string searchString, string sortOrder, int currentPage = 1, int pageSize = 5)
+        {
+
+            #region search
+
+            IQueryable<User> users = _dbContext.UsersList;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(s => s.UserName.Contains(searchString)
+                || s.Email.Contains(searchString)
+                || s.PhoneNumber.Contains(searchString));
+            }
+
+            #endregion
+
+            #region Phần tử
+            int totalItems = users.Count();
+            int totalPages;
+            if (totalItems / pageSize == 0)
+            {
+                totalPages = totalItems / pageSize;
+            }
+            else
+            {
+                totalPages = (totalItems / pageSize) + 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+                if (currentPage == 0)
+                {
+                    currentPage = 1;
+                }
+            }
+            #endregion
+
+            #region Số trang trước sau
+            int startPage = 1;
+            int endPage = totalPages;
+            int displayPage = 6;
+            bool isOdd = displayPage % 2 != 0;
+            int leftPage = displayPage / 2;
+            int rightPage = displayPage / 2;
+
+            if (!isOdd)
+            {
+                rightPage = (int)Math.Floor((decimal)displayPage / 2);
+                leftPage = rightPage - 1;
+            }
+
+            if (currentPage <= startPage + leftPage)
+            {
+                endPage = startPage + (displayPage - 1);
+            }
+            else if (currentPage >= endPage - rightPage)
+            {
+                startPage = endPage - (displayPage - 1);
+            }
+            else
+            {
+                startPage = currentPage - leftPage;
+                endPage = currentPage + rightPage;
+            }
+
+            if (endPage > totalPages)
+            {
+                endPage = totalPages;
+            }
+
+            if (startPage < 1)
+            {
+                startPage = 1;
+            }
+            #endregion
+
+            #region Tạo Sắp Xếp Giá Trị 1 Thuộc Tính
+
+            ViewBag.SortUserName = String.IsNullOrEmpty(sortOrder) ? "username_desc" : string.Empty;
+
+            ViewBag.SortPhoneNumber = sortOrder == "phone_asc" ? "phone_asc" : "phone_asc";
+            ViewBag.SortEmail = sortOrder == "email_desc" ? "email_desc" : "email_desc";
+            ViewBag.SortDistrict = sortOrder == "district_asc" ? "district_asc" : "district_asc";
+            ViewBag.SortAddress = sortOrder == "address_desc" ? "address_desc" : "address_desc";
+            ViewBag.Sortprovince = sortOrder == "province_desc" ? "province_desc" : "province_desc";
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    users = users.OrderByDescending(s => s.UserName);
+                    break;
+
+                case "phone_desc":
+                    users = users.OrderByDescending(s => s.PhoneNumber);
+                    break;
+                case "phone_asc":
+                    users = users.OrderBy(s => s.PhoneNumber);
+                    break;
+
+                case "email_desc":
+                    users = users.OrderByDescending(s => s.Email);
+                    break;
+                case "email_asc":
+                    users = users.OrderBy(s => s.Email);
+                    break;
+
+                case "address_desc":
+                    users = users.OrderByDescending(s => s.Address);
+                    break;
+                case "address_asc":
+                    users = users.OrderBy(s => s.Address);
+                    break;
+
+                case "province_desc":
+                    users = users.OrderByDescending(s => s.Province);
+                    break;
+                case "province_asc":
+                    users = users.OrderBy(s => s.Province);
+                    break;
+
+                case "category_desc":
+                    users = users.OrderByDescending(s => s.District);
+                    break;
+                case "category_asc":
+                    users = users.OrderByDescending(s => s.District);
+                    break;
+                default:
+                    users = users.OrderBy(s => s.UserName);
+                    break;
+            }
+            #endregion
+
+            users = users.Skip((currentPage - 1) * pageSize)
+                    .Take(pageSize);
+
+            return View(new UserPageViewModel
+            {
+                Page = new PaginationViewModel
+                {
+                    CurrentPage = currentPage,
+                    EndPage = endPage,
+                    StartPage = startPage,
+                    TotalPages = totalPages,
+                    PageSize = pageSize
+                },
+
+                Users = UserViewModel.UserViews(users)
+            });
+        }
+
+        #region Delete Book
+        [HttpPost]
+        public JsonResult AjaxDeleteUser(int id)
+        {
+            _dbContext.Entry(new User()
+            {
+                Id = id
+            }).State = EntityState.Deleted;
+
+            _dbContext.SaveChanges();
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteManyUser(List<int> ids)
+        {
+            try
+            {
+                if (ids == null || ids.Count == 0)
+                {
+                    Response.StatusCode = 400;
+                }
+                else
+                {
+                    ids.ForEach(id => _dbContext.Entry(new User
+                    {
+                        Id = id
+                    }).State = EntityState.Deleted);
+
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                Response.StatusCode = 500;
+
+            }
+
+            return Json(string.Empty);
+        }
+        #endregion
+
+        #region Details
+        [HttpGet]
+        public IActionResult DetailsUser(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var currentUser = _dbContext.UsersList.FirstOrDefault(x => x.Id == id);
+                
+                return View(new DetailsUserViewModel
+                {
+                    Id = currentUser.Id,
+                    UserName = currentUser.UserName,
+                    PhoneNumber = currentUser.PhoneNumber,
+                    Email = currentUser.Email,
+                    Address = currentUser.Address,
+                    Province = currentUser.Province,
+                    District = currentUser.District,
+                    FirstName = currentUser.FirstName,
+                    LastName = currentUser.LastName,
+                    Photo = currentUser.ImageName,
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DetailsUser(int? id, DetailsUserViewModel detailsUser)
+        {
+            var user = _dbContext.UsersList.Find(detailsUser.Id);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Không có User");
+            }
+            else
+            {
+                user.Id = detailsUser.Id;
+                user.UserName = detailsUser.UserName;
+                user.PhoneNumber = detailsUser.PhoneNumber;
+                user.Email = detailsUser.Email;
+                user.LastName = detailsUser.LastName;
+                user.FirstName = detailsUser.FirstName;
+                user.Address = detailsUser.Address;
+                user.Province = detailsUser.Province;
+                user.District = detailsUser.District;
+                user.ImageName = detailsUser.Photo;
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(detailsUser);
+            }
+
+            return RedirectToAction("Users");
+        }
+        #endregion
+
         [HttpGet]
         public IActionResult SignUp()
         {
@@ -517,7 +733,7 @@ namespace WebCoreMVC.Controllers
             var temp = _dbContext.Districts.Where(x => x.ProvinceId == provinceId).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.Id.ToString(),
             }).ToList();
 
             return Json(temp);
@@ -525,13 +741,10 @@ namespace WebCoreMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SignUp(CreateUserViewModel createUser)
+        public IActionResult SignUp(CreateUserViewModel createUser, int provinceId, IFormFile image)
         {
-            ViewBag.Province = _dbContext.Provinces.Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            }).ToList();
+            IQueryable<Province> provinces = _dbContext.Provinces;
+            IQueryable<District> districts = _dbContext.Districts;
 
             if (_dbContext.UsersList.Any(x => x.UserName == createUser.UserName))
             {
@@ -545,6 +758,17 @@ namespace WebCoreMVC.Controllers
 
             if (!ModelState.IsValid)
             {
+                ViewBag.Province = _dbContext.Provinces.Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }).ToList();
+
+                var temp = _dbContext.Districts.Where(x => x.ProvinceId == provinceId).Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString(),
+                }).ToList();
                 return View(createUser);
             }
 

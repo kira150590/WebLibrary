@@ -12,27 +12,27 @@ namespace WebCoreMVC.ViewModels
 
         [Required(ErrorMessage = "{0} Không được để trống")]
         [StringLength(maximumLength: 500, MinimumLength = 1, ErrorMessage = "{0} Không được nhỏ hơn {2} và vượt quá {1}")]
-        [Display(Name = "Tên Sách")]
+        [Display(Name = "Tên Sách *")]
         public string NameOfBook { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
         [StringLength(maximumLength: 500, MinimumLength = 1, ErrorMessage = "{0} Không được nhỏ hơn {2} và vượt quá {1}")]
-        [Display(Name = "Tên Tác Giả")]
+        [Display(Name = "Tên Tác Giả *")]
         public string Author { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
         [Range(1, Int32.MaxValue)]
-        [Display(Name = "Năm Xuất Bản")]
+        [Display(Name = "Năm Xuất Bản *")]
         public int YearOfPrint { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
         [StringLength(maximumLength: 20, MinimumLength = 4, ErrorMessage = "{0} Không được nhỏ hơn {2} và vượt quá {1}")]
-        [Display(Name = "Mã Sách")]
+        [Display(Name = "Mã Sách *")]
         public string Code { get; set; }
 
         [Required(ErrorMessage = "{0} Không được để trống")]
         [Range(1, Int32.MaxValue)]
-        [Display(Name = "Số Lượng")]
+        [Display(Name = "Số Lượng *")]
         public int Quantity { get; set; }
 
         [Display(Name = "Ảnh")]
@@ -42,7 +42,7 @@ namespace WebCoreMVC.ViewModels
 
         public IEnumerable<SelectListItem> Categories { get; set; }
 
-        [Display(Name = "Thể Loại")]
+        [Display(Name = "Thể Loại *")]
         [Required(ErrorMessage = "{0} Không được để trống")]
         public int CategoryId { get; set; }
     }

@@ -26,7 +26,7 @@
 {
     Html.AntiForgeryToken();
     @Html.ValidationSummary(false)
-
+    <div>(Có dấu * vui lòng điền đầy đủ thông tin)</div>
     <div class="form-group">
         <!--Gọi lại nhãn ở ViewModel hiển thị tên-->
         @Html.LabelFor(x => x.NameOfBook)
@@ -40,7 +40,7 @@
         @Html.ValidationMessageFor(x => x.Author)
     </div>
     <div class="form-group">
-        @Html.LabelFor(x => x.Categories)
+        @Html.LabelFor(x => x.CategoryId)
         @Html.DropDownListFor(x => x.CategoryId, (IEnumerable<SelectListItem>)ViewBag.Categories, "Danh Mục", new { @class = "form-control" })
         @Html.ValidationMessageFor(x => x.CategoryId)
     </div>

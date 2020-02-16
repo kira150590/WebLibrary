@@ -31,9 +31,10 @@ namespace WebCoreMVC.ViewModels
 
         public string ImageName { get; set; }
 
-        public UserViewModel UserView(User userView)
+        public static UserViewModel UserView(User userView)
         {
             var a = new UserViewModel();
+            a.Id = userView.Id;
             a.UserName = userView.UserName;
             a.PassWord = userView.PassWord;
             a.FirstName = userView.FirstName;
@@ -49,7 +50,7 @@ namespace WebCoreMVC.ViewModels
             return a;
         }
 
-        public IEnumerable<UserViewModel> UserViews(IEnumerable<User> users)
+        public static IEnumerable<UserViewModel> UserViews(IEnumerable<User> users)
         {
             List<UserViewModel> userViews = new List<UserViewModel>();
 
@@ -60,5 +61,7 @@ namespace WebCoreMVC.ViewModels
             }
             return userViews;
         }
+
+        
     }
 }

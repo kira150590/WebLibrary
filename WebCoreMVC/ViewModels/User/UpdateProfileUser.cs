@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebCoreMVC.ViewModels
 {
-    public class CreateUserViewModel
+    public class UpdateProfileUser
     {
         public int Id { get; set; }
 
@@ -56,6 +58,8 @@ namespace WebCoreMVC.ViewModels
         public string District { get; set; }
 
         [Display(Name = "Ảnh")]
+        public string Photo { get; set; }
+
         public IFormFile Image { get; set; }
     }
 }
